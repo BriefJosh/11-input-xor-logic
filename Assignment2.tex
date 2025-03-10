@@ -1,0 +1,166 @@
+\documentclass{article}  
+
+\usepackage{fancyhdr}  
+\usepackage{extramarks}  
+\usepackage{amsmath}  
+\usepackage{amsthm}  
+\usepackage{amsfonts}  
+\usepackage{tikz}  
+\usepackage[plain]{algorithm}  
+\usepackage{algpseudocode}  
+\usepackage{graphicx}  
+\usepackage{hyperref}  
+\usepackage{circuitikz}  
+ 
+\ctikzset{logic ports=ieee, logic ports/scale=0.6}
+
+% Basic Document Settings  
+\topmargin=-0.45in  
+\evensidemargin=0in  
+\oddsidemargin=0in  
+\textwidth=6.5in  
+\textheight=9.0in  
+\headsep=0.25in  
+\linespread{1.1}  
+
+\pagestyle{fancy}  
+\lhead{Josh Christian}  
+\rhead{Github : BriefJosh}  
+\cfoot{\thepage}  
+
+\renewcommand\headrulewidth{0.4pt}  
+\renewcommand\footrulewidth{0.4pt}  
+\setlength\parindent{0pt}  
+
+\usetikzlibrary{automata,positioning} 
+
+
+\begin{document}  
+
+\section*{Cascaded vs Parallel XOR Logic}
+
+\textbf{Cascaded XOR Logic:} In a cascaded XOR configuration, the output of one XOR gate is connected to the input of the next XOR gate in a sequential manner. This creates a chain of XOR gates where each gate processes the result of the previous gate along with a new input. This configuration is simple and easy to implement but can introduce a delay as the signal propagates through each gate in the sequence.
+
+\textbf{Parallel XOR Logic:} In a parallel XOR configuration, multiple XOR gates operate simultaneously on different pairs of inputs. The outputs of these gates are then combined in subsequent layers of XOR gates until a single output is produced. This arrangement can be more complex to design but offers the advantage of reduced propagation delay, as multiple operations are performed concurrently.
+
+\begin{center}  
+    \textbf{Cascaded 11 Input XOR Logic}  
+\end{center}  
+
+\begin{circuitikz} \draw   
+    % 1st XOR Model  
+    (0,0) node[xor port](xor1) {}  
+        (xor1.in 1) node[anchor=east] {$x_0$}  
+        (xor1.in 2) node[anchor=east] {$x_1$}  
+
+    %  2nd XOR Model    
+    (1.5,-0.5) node[xor port] (xor2) {}  
+    (xor1.out) |- (xor2.in 1)   
+    (xor2.in 2) to (xor2.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_2$}  
+
+    % 3rd XOR Model  
+    (3, -1) node[xor port] (xor3) {}  
+    (xor2.out) |- (xor3.in 1)  
+    (xor3.in 2) to (xor3.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_3$}  
+
+    % 4th XOR Model  
+    (4.5, -1.5) node[xor port] (xor4) {}  
+    (xor3.out) |- (xor4.in 1)  
+    (xor4.in 2) to (xor4.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_4$}  
+
+    % 5th XOR Model  
+    (6, -2) node[xor port] (xor5) {}  
+    (xor4.out) |- (xor5.in 1)   
+    (xor5.in 2) to (xor5.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_5$}  
+    
+    % 6th XOR Model  
+    (7.5, -2.5) node[xor port] (xor6) {}   
+    (xor5.out) |- (xor6.in 1)  
+    (xor6.in 2) to (xor6.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_6$}  
+
+    % 7th XOR Model  
+    (9, -3) node[xor port] (xor7) {}  
+    (xor6.out) |- (xor7.in 1)  
+    (xor7.in 2) to (xor7.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_7$}  
+
+    % 8th XOR Model  
+    (10.5, -3.5) node[xor port] (xor8) {}  
+    (xor7.out) |- (xor8.in 1)  
+    (xor8.in 2) to (xor8.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_8$}  
+    
+    % 9th XOR Model  
+    (12, -4) node[xor port] (xor9) {}  
+    (xor8.out) |- (xor9.in 1)  
+    (xor9.in 2) to (xor9.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_9$}  
+    
+
+    % 10th XOR Model  
+    (13.5, -4.5) node[xor port] (xor10) {}  
+    (xor9.out) |- (xor10.in 1)  
+    (xor10.in 2) to (xor10.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_{10}$}  
+        (xor10.out) node [anchor=west] {Output};  
+
+\end{circuitikz}  
+
+\begin{center}  
+    \textbf{Parallel 11 Input XOR Logic}  
+\end{center}  
+
+\begin{circuitikz} \draw  
+    % First Layer XOR Model [XOR 1 - 6]  
+    (0,0) node [xor port] (xor1) {}  
+    (0,-1) node [xor port] (xor2) {}  
+    (0,-2) node [xor port] (xor3) {}  
+    (0,-3) node [xor port] (xor4) {}  
+    (0,-4) node [xor port] (xor5) {}  
+    (xor1.in 1) node[anchor=east] {$x_0$}  
+    (xor1.in 2) node[anchor=east] {$x_1$}  
+    (xor2.in 1) node[anchor=east] {$x_2$}  
+    (xor2.in 2) node[anchor=east] {$x_3$}  
+    (xor3.in 1) node[anchor=east] {$x_4$}  
+    (xor3.in 2) node[anchor=east] {$x_5$}  
+    (xor4.in 1) node[anchor=east] {$x_6$}  
+    (xor4.in 2) node[anchor=east] {$x_7$}  
+    (xor5.in 1) node[anchor=east] {$x_8$}  
+    (xor5.in 2) node[anchor=east] {$x_9$}  
+
+    % Second Layer XOR Model [XOR 7 - 9]  
+    (2,-0.5) node [xor port] (xor6) {}  
+    (2, -2.5) node [xor port] (xor7) {}  
+    (2, -4.5) node [xor port] (xor8) {}  
+    (xor8.in 2) to (xor8.in 2 -| xor1.in 2)  
+        node[anchor=east] {$x_{10}$}  
+
+    % Connect First Layer to Second Layer  
+    (xor1.out) |- (xor6.in 1)  
+    (xor2.out) |- (xor6.in 2)  
+    (xor3.out) |- (xor7.in 1)  
+    (xor4.out) |- (xor7.in 2)  
+    (xor5.out) |- (xor8.in 1)  
+
+    % Third Layer XOR Model  
+    (4, -1.5) node [xor port] (xor9) {}   
+
+    % Connect Second Layer to Third Layer  
+    (xor6.out) |- (xor9.in 1)  
+    (xor7.out) |- (xor9.in 2)  
+
+    % Fourth Layer XOR Model  
+    (6, -2) node [xor port] (xor10) {}   
+
+    % Connect Second Layer (XOR 8) and Third Layer (XOR 9) to Fourth Layer  
+    (xor9.out) |- (xor10.in 1)
+    (xor8.out) |- ++(1,1) |- (xor10.in 2)
+    (xor10.out) node [anchor=west] {Output};
+\end{circuitikz}  
+
+\end{document}  
